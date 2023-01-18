@@ -10,22 +10,38 @@ public class Main {
         }
         catch (FileNotFoundException e) {
             return;
-        }
+        } // If the file is not found a return is issued
         SinglyLinkedList<CustomerOrder> orderList = new SinglyLinkedList<CustomerOrder>();
-        while (input.hasNextLine()) {
-            String[] currentLine = input.nextLine().split("\s");
-            if (currentLine[0] == "CustomerOrder") {
-                orderList.addLast(new CustomerOrder(Integer.parseInt(currentLine[1]), currentLine[2], Integer.parseInt(currentLine[3]), Integer.parseInt(currentLine[4])));
-            }
-        }
+        SinglyLinkedList<WorkerAssignment> assingmentList = new SinglyLinkedList<WorkerAssignment>();
         SinglyLinkedList<String> availableWorkerList = new SinglyLinkedList<String>();
         availableWorkerList.addLast("Alice");
         availableWorkerList.addLast("Bob");
         availableWorkerList.addLast("Carol");
         availableWorkerList.addLast("David");
         availableWorkerList.addLast("Emily");
+        // initialize available worker list with the initial order of workers.
+        if (!input.hasNextLine()) {
+            System.out.println("Error: No Input in file");
+            return;
+        } // Stop the program if there is no input in the file.
+        int currenttime;
+        boolean firstLoop = true;
+        while (input.hasNextLine()   {
+            if (firstLoop) {
+
+            }
+
+        }
         // Linked list contains the order of the available workers set not to change
     }
-    public String assignCustomerOrder() {
+    public int incrementTime(int currenttime) {
+        int hours = currenttime/100;
+        int minutes = currenttime%100;
+        minutes++;
+        if (minutes == 60) {
+            minutes = 0;
+            hours++;
+        }
+        return (hours*100)+minutes;
     }
 }

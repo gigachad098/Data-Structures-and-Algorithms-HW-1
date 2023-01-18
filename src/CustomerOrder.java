@@ -3,11 +3,13 @@ public class CustomerOrder {
     String customer;
     int numberofBooks;
     int numberofElectronics;
+    boolean bundleAble;
     CustomerOrder(int orderTime, String customer, int numberofBooks, int numberofElectronics) {
         this.orderTime = orderTime;
         this.customer = customer;
         this.numberofBooks = numberofBooks;
         this.numberofElectronics = numberofElectronics;
+        bundleAble = canBundle();
     }
     public int getOrderTime() {
         return this.orderTime;
@@ -20,5 +22,13 @@ public class CustomerOrder {
     }
     public int getNumberofElectronics() {
         return this.numberofElectronics;
+    }
+    public boolean canBundle() {
+        if ((numberofElectronics == 0 && numberofBooks <= 10) || (numberofBooks == 10 && numberofElectronics <= 10)) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 }
