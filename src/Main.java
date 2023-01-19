@@ -11,6 +11,9 @@ public class Main {
         catch (FileNotFoundException e) {
             return;
         } // If the file is not found a return is issued
+
+
+        // Create all needed lists
         SinglyLinkedList<CustomerOrder> orderList = new SinglyLinkedList<CustomerOrder>();
         SinglyLinkedList<WorkerAssignment> assingmentList = new SinglyLinkedList<WorkerAssignment>();
         SinglyLinkedList<String> availableWorkerList = new SinglyLinkedList<String>();
@@ -20,63 +23,51 @@ public class Main {
         availableWorkerList.addLast("David");
         availableWorkerList.addLast("Emily");
         // initialize available worker list with the initial order of workers.
+
+
         if (!input.hasNextLine()) {
             System.out.println("Error: No Input in file");
             return;
         } // Stop the program if there is no input in the file.
         int currenttime = -1;
         String[] currentLine = new String[0];
-        int requestTime = 0;
         boolean firstLoop = true;
         while (input.hasNextLine())   {
             if (firstLoop) {
-                currentLine = breakUpLine(input.nextLine());
+                currentLine = input.nextLine().split("\s");
                 currenttime = Integer.parseInt(currentLine[1]);
-                requestTime = Integer.parseInt(currentLine[1]);
             }
-            if (currenttime == requestTime) {
-                if (currentLine[0].equals("CustomerOrder")) {
-                    orderList.addLast(new CustomerOrder(Integer.parseInt(currentLine[1]), currentLine[2], Integer.parseInt(currentLine[3]), Integer.parseInt(currentLine[4])));
-                }// If a customer order has been requested create it and add it to the list.
-                else if (currentLine[0].equals("PrintAvailableWorkerList")) {
+            if ((orderList.last().getOrderTime() == currenttime) || (firstLoop)) {
+                switch (currentLine[0]) {
+                    case "CustomerOrder":
+                        orderList.addLast(new CustomerOrder(Integer.parseInt(currentLine[1]), currentLine[2], Integer.parseInt(currentLine[3]), Integer.parseInt(currentLine[4])));
+                        orderList.sort();
+                        break;
+                    case "PrintAvailableWorkerList":
 
-                }
-                else if (currentLine[0].equals("PrintWorkerAssignmentList")) {
-                }
-                else if (currentLine[0].equals("PrintMaxFulfillmentTime")) {
+                        break;
+                    case "PrintWorkerAssignmentList":
+                        break;
+                    case "PrintMaxFulfillmentTime":
 
-                }
-                else {
-                    System.out.println("Error");
-                    return;
+                        break;
+                    default:
+                        System.out.println("Error");
+                        return;
                 }
                 currentLine = input.nextLine().split("\s");
-                requestTime = Integer.parseInt(currentLine[1]);
+                // You will always handle the first request on the first loop as you need it to start.
+                // Therefore, we will ping for a new one.
+                firstLoop = false;
             } // If the current time matches with the new request,
             // complete the request and ping for a new one
-            if ((orderList.last().bundleAble) && (currenttime - orderList.last().getOrderTime() < 5)) {
-                // look for a bundle
+            if (((orderList.last().bundleAble) && (currenttime - orderList.last().getOrderTime() < 5)) && ((orderList.last().getNumberofElectronics() == 0) && (((orderList.last().getNumberofBooks() + Integer.parseInt(currentLine[3])) < 10) ||
+                    (orderList.last().getNumberofBooks() == 0) && (orderList.last().getNumberofElectronics() + Integer.parseInt(currentLine[4]) < 10)))) {
+                // bundle
+                currentLine = input.nextLine().split("\s");
             }
-            currenttime = incrementTime(currenttime);
+            currenttime = Time.incrementTime(currenttime);
         }
         // Linked list contains the order of the available workers set not to change
-    }
-    public static int incrementTime(int currenttime) {
-        int hours = currenttime/100;
-        int minutes = currenttime%100;
-        minutes++;
-        if (minutes == 60) {
-            minutes = 0;
-            hours++;
-        }
-        return (hours*100)+minutes;
-    }
-    public static String[] breakUpLine(String inputLine) {
-        String[] brokenUp = inputLine.split("\s");
-        return brokenUp;
-    }
-    public String printAvailableWorkerList(SinglyLinkedList<WorkerAssignment> workerList) {
-        String output = "AvailableWorkerList " + workerList;
-        return output;
     }
 }

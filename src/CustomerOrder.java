@@ -4,6 +4,7 @@ public class CustomerOrder {
     int numberofBooks;
     int numberofElectronics;
     boolean bundleAble;
+    String worker;
     CustomerOrder(int orderTime, String customer, int numberofBooks, int numberofElectronics) {
         this.orderTime = orderTime;
         this.customer = customer;
@@ -30,5 +31,8 @@ public class CustomerOrder {
         else {
             return false;
         }
+    }
+    public void setWorker(String worker) {
+        this.worker = worker;
     }
 }

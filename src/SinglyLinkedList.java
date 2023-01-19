@@ -227,4 +227,7 @@ public class SinglyLinkedList<E> implements Cloneable {
         // Rotate the linked list by pointing the head to tail,
         // updating the head, making a new tail, and killing the pointer
     }
+    public void sort() {
+        // Implement some sort of merg sort alg
+    }
 }
