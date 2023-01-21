@@ -259,13 +259,32 @@ public class SinglyLinkedList<E> implements Cloneable {
         sb.append(")");
         return sb.toString();
     }
-
-    public void rotate() {
-        tail.next = head;
-        head = head.next;
-        tail = tail.next;
-        tail.next = null;
-        // Rotate the linked list by pointing the head to tail,
-        // updating the head, making a new tail, and killing the pointer
+    public E returnIndexed(int index) {
+        Node<E> current = head;
+        int indexCheck = 0;
+        while (current.getNext() != null) {
+            if (indexCheck == index) {
+                return current.getElement();
+            }
+            else {
+                current = current.getNext();
+                indexCheck++;
+            }
+        }
+        return null;
+    }
+    public String printList() {
+        Node<E> current = head;
+        StringBuilder result = new StringBuilder();
+        while (current != null) {
+            if (current.getNext() != null) {
+                result.append(current.getElement()).append(" ");
+            }
+            else {
+                result.append(current.getElement());
+            }
+            current = current.getNext();
+        }
+        return result.toString();
     }
 }

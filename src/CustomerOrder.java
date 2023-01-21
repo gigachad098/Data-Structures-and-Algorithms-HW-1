@@ -37,4 +37,13 @@ public class CustomerOrder {
     public void setWorker(String worker) {
         this.worker = worker;
     }
+    public int calculateOrderCompletion () {
+        if ((this.getNumberofBooks() != 0) && (this.getNumberofElectronics() != 0)) {
+            return this.getOrderTime() + this.getNumberofBooks() + this.getNumberofElectronics() + 5;
+        }
+        return 0;
+    }
+    public static void printCompletedOrder(CustomerOrder ordertoComplete, int currentTime) {
+        System.out.println("OrderCompletion " + currentTime + " " + ordertoComplete.getCustomer());
+    }
 }

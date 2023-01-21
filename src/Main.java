@@ -14,7 +14,6 @@ public class Main {
 
 
         // Create all needed lists
-        SinglyLinkedList<CustomerOrder> fileOrderList = new SinglyLinkedList<CustomerOrder>();
         SinglyLinkedList<WorkerAssignment> assingmentList = new SinglyLinkedList<WorkerAssignment>();
         SinglyLinkedList<String> availableWorkerList = new SinglyLinkedList<String>();
         availableWorkerList.addLast("Alice");
@@ -23,6 +22,7 @@ public class Main {
         availableWorkerList.addLast("David");
         availableWorkerList.addLast("Emily");
         // initialize available worker list with the initial order of workers.
+        int MaxFufillMentTime = 0;
 
 
         if (!input.hasNextLine()) {
@@ -37,6 +37,19 @@ public class Main {
                 currentLine = input.nextLine().split("\s");
                 currenttime = Integer.parseInt(currentLine[1]);
             }
+            else if (assingmentList.first().newestOrder().calculateOrderCompletion() == currenttime)  {
+                availableWorkerList.addLast(assingmentList.first().worker);
+                while (!assingmentList.first().assignedOrder.isEmpty()) {
+                    // order completion
+                    CustomerOrder.printCompletedOrder(assingmentList.first().assignedOrder.first(), currenttime);
+                    if (currenttime - assingmentList.first().assignedOrder.first().getOrderTime() > MaxFufillMentTime) {
+                        MaxFufillMentTime = (currenttime- assingmentList.first().assignedOrder.first().getOrderTime());
+                        // If the completed order took longer to fufill then the maximum order time swap them.
+                    }
+                    assingmentList.first().assignedOrder.removeFirst();
+                }
+            }
+//            Move this stuff down here, up to Here^^^^
             if ((Integer.parseInt(currentLine[1]) == currenttime) || (firstLoop)) {
                 switch (currentLine[0]) {
                     case "CustomerOrder":
@@ -47,9 +60,10 @@ public class Main {
 
                         break;
                     case "PrintWorkerAssignmentList":
+
                         break;
                     case "PrintMaxFulfillmentTime":
-
+                        printMaxFufillmentTime(MaxFufillMentTime);
                         break;
                     default:
                         System.out.println("Error");
@@ -62,17 +76,17 @@ public class Main {
                 continue;
             } // If the current time matches with the new request,
             // complete the request and ping for a new one
-            if (((assingmentList.last().assignedOrder.last().canBundle()) && (assingmentList.last().assignedOrder.last().getOrderTime() - currenttime < 5))) {
+            if (((assingmentList.last().newestOrder().canBundle()) && (assingmentList.last().newestOrder().getOrderTime() - currenttime < 5))) {
                 // Will not work without time class
-                if (((assingmentList.last().assignedOrder.first().getNumberofBooks() + Integer.parseInt(currentLine[3])) < 10) ||
-                        (assingmentList.last().assignedOrder.first().getNumberofElectronics() + Integer.parseInt(currentLine[4]) < 10)) {
+                if (((assingmentList.last().newestOrder().getNumberofBooks() + Integer.parseInt(currentLine[3])) < 10) ||
+                        (assingmentList.last().newestOrder().getNumberofElectronics() + Integer.parseInt(currentLine[4]) < 10)) {
                     if (currentLine[0] == "CustomerOrder") {
-                        if ((assingmentList.last().assignedOrder.last().getNumberofBooks() == 0) && (Integer.parseInt(currentLine[3]) == 0)) {
+                        if ((assingmentList.last().newestOrder().getNumberofBooks() == 0) && (Integer.parseInt(currentLine[3]) == 0)) {
                             assingmentList.last().assignedOrder.addLast(new CustomerOrder(Integer.parseInt(currentLine[1]), currentLine[2], Integer.parseInt(currentLine[3]), Integer.parseInt(currentLine[4])));
                             currentLine = input.nextLine().split("\s");
                             continue;
                         }
-                        else if ((assingmentList.last().assignedOrder.last().getNumberofElectronics() == 0) && (assingmentList.last().assignedOrder.last().getNumberofBooks() == 0) && (Integer.parseInt(currentLine[4]) == 0)) {
+                        else if ((assingmentList.last().newestOrder().getNumberofElectronics() == 0) && (Integer.parseInt(currentLine[4]) == 0)) {
                             assingmentList.last().assignedOrder.addLast(new CustomerOrder(Integer.parseInt(currentLine[1]), currentLine[2], Integer.parseInt(currentLine[3]), Integer.parseInt(currentLine[4])));
                             currentLine = input.nextLine().split("\s");
                             continue;
@@ -88,7 +102,7 @@ public class Main {
     public static SinglyLinkedList<WorkerAssignment> insertList(SinglyLinkedList<WorkerAssignment> normalList, WorkerAssignment newElement) {
         SinglyLinkedList<WorkerAssignment>  newlist = new SinglyLinkedList<WorkerAssignment>();
         while (normalList.first() != null) {
-            if ((normalList.first().calculateOrderCompletion(normalList.first().lastOrder())) < (newElement.calculateOrderCompletion(newElement.lastOrder()))) {
+            if ((normalList.first().newestOrder().calculateOrderCompletion()) < (newElement.newestOrder().calculateOrderCompletion())) {
                 newlist.addLast(normalList.first());
             }
             else {
@@ -99,5 +113,8 @@ public class Main {
             }
         }
         return newlist;
+    }
+    public static void printMaxFufillmentTime(int MaxFufillmentTime) {
+        System.out.println("PrintMaxFulfillmentTime " + MaxFufillmentTime);
     }
 }
